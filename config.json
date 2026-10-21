@@ -1,0 +1,10 @@
+{
+    "llm_api_url": "http://localhost:11434/v1/chat/completions",
+    "llm_model": "qwen2.5:14b",
+    "llm_api_key": "ollama",
+    "min_critic_score": 92,
+    "max_loops": 4,
+    "output_dir": "~/.hermes/skills/omega-master/dossiers",
+    "retry_attempts": 3,
+    "retry_delay_seconds": 3
+}

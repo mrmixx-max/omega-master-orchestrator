@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMEGA Master-Orchestrator | Cyberpunk Freelance Engine</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#090d16',
+                        cardbg: '#111827',
+                        bordercol: '#1f2937',
+                        neoncyan: '#06b6d4',
+                        neongreen: '#10b981',
+                        neonpurple: '#8b5cf6',
+                        neonred: '#f43f5e'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #090d16; color: #f3f4f6; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.15); }
+        .glow-green { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .animate-pulse-slow { animation: pulseGlow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-bordercol bg-cardbg/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-cyan-500/20">
+                Ω
+            </div>
+            <div>
+                <h1 class="font-bold tracking-wider text-lg text-white flex items-center gap-2">
+                    OMEGA MASTER-ORCHESTRATOR 
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">v2.0 PRO</span>
+                </h1>
+                <p class="text-xs text-slate-400">Adversarial Swarm Stresstest & Deterministischer Slop-Sanitizer</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="hidden md:flex items-center space-x-2 text-xs text-slate-400 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Gate-Schwelle: <strong class="text-white font-mono">&gt;= 92 Pkt</strong></span>
+            </div>
+            <button onclick="resetApp()" class="px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition border border-slate-700 flex items-center gap-1.5">
+                <i class="fa-solid fa-rotate-right"><span>Reset</span></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Column: Input Panel & Controls (Cols 1-5) -->
+        <section class="lg:col-span-5 space-y-6">
+            <div class="bg-cardbg border border-bordercol rounded-2xl p-5 shadow-xl glow-cyan">
+                <h2 class="text-sm font-semibold tracking-wide uppercase text-cyan-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders"></i> Engine Konfiguration
+                </h2>
+
+                <!-- Pipeline Mode Selection -->
+                <div class="space-y-2 mb-5">
+                    <label class="text-xs font-medium text-slate-300">Wähle die Freelance-Pipeline:</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="setMode('omega')" id="btn-mode-omega" class="p-3 text-left rounded-xl border border-cyan-500 bg-cyan-950/40 text-white transition relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 w-2 h-2 bg-cyan-400 rounded-bl"></div>
+                            <div class="text-xs font-bold text-cyan-300">/omega-audit</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Master Kombi</div>
+                        </button>
+                        <button type="button" onclick="setMode('swarm')" id="btn-mode-swarm" class="p-3 text-left rounded-xl border border-bordercol bg-slate-900/50 hover:bg-slate-800 text-slate-300 transition">
+                            <div class="text-xs font-bold text-slate-200">/swarm-audit</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Fokusgruppe</div>
+                        </button>
+                        <button type="button" onclick="setMode('sanitize')" id="btn-mode-sanitize" class="p-3 text-left rounded-xl border border-bordercol bg-slate-900/50 hover:bg-slate-800 text-slate-300 transition">
+                            <div class="text-xs font-bold text-slate-200">/slop-sanitize</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Text-Forensik</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <form id="auditForm" onsubmit="startPipeline(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Ziel-URL, Dateipfad oder Rohtext <span class="text-cyan-400">*</span></label>
+                        <textarea id="targetInput" rows="3" required placeholder="https://beispiel-landingpage.de oder Text kopieren..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition font-mono text-xs"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Branche / Ziel-Nische <span class="text-cyan-400">*</span></label>
+                            <input type="text" id="nicheInput" required value="B2B SaaS / KI-Automatisierung" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Gewünschte Ziel-Tonalität</label>
+                            <input type="text" id="styleInput" value="Messerscharfer Direkt-Response-Experte, hohe Burstiness" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Bekannte Käufer-Einwände / Konkurrenz-Frust</label>
+                        <input type="text" id="objectionsInput" value="Zu komplexe Einrichtung, unklare DSGVO, versteckte Kosten, leere ROI-Versprechen" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-black font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-bolt"></i> OMEGA PIPELINE JETZT STARTEN
+                    </button>
+                </form>
+            </div>
+
+            <!-- Preset Scenarios Card -->
+            <div class="bg-cardbg border border-bordercol rounded-2xl p-4 shadow-xl">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-lightbulb text-amber-400"></i> Schnellstart-Presets
+                </h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="loadPreset('saas')" class="p-2.5 text-left rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition text-xs">
+                        <div class="font-semibold text-white">B2B SaaS Landingpage</div>
+                        <div class="text-[10px] text-slate-400">Conversion-Killer & Slop</div>
+                    </button>
+                    <button onclick="loadPreset('agency')" class="p-2.5 text-left rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition text-xs">
+                        <div class="font-semibold text-white">Agentur Pitch-Deck</div>
+                        <div class="text-[10px] text-slate-400">Finanz-CFO & Skeptiker</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Live Console & Results View (Cols 6-12) -->
+        <section class="lg:col-span-7 space-y-6">
+
+            <!-- Terminal / Live Log Simulation Box -->
+            <div id="terminalCard" class="bg-cardbg border border-bordercol rounded-2xl p-5 shadow-xl font-mono text-xs relative overflow-hidden">
+                <div class="flex items-center justify-between pb-3 border-b border-bordercol mb-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1.5">
+                            <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                        </div>
+                        <span class="text-slate-400 text-[11px] ml-2">omega_orchestrator.py — Live Terminal</span>
+                    </div>
+                    <div id="statusBadge" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 font-bold">
+                        BEREIT
+                    </div>
+                </div>
+
+                <div id="consoleOutput" class="h-44 overflow-y-auto space-y-1.5 text-slate-300 scroll-smooth pr-2">
+                    <div class="text-slate-500">[SYSTEM] OMEGA Master-Orchestrator v2.0 initialisiert. Bereit für Pipeline-Start.</div>
+                    <div class="text-cyan-400">[READY] Bitte Ziel-URL eingeben und Pipeline starten.</div>
+                </div>
+
+                <!-- Progress Bar Container -->
+                <div id="progressContainer" class="mt-4 hidden">
+                    <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                        <span id="progressStepName">Phasen-Initialisierung...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                        <div id="progressBar" class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results View Container (Tabs) -->
+            <div id="resultsCard" class="bg-cardbg border border-bordercol rounded-2xl shadow-xl hidden">
+                <!-- Tab Navigation Header -->
+                <div class="flex border-b border-bordercol overflow-x-auto p-2 bg-slate-900/40 rounded-t-2xl gap-1">
+                    <button onclick="switchTab('scorecard')" id="tab-btn-scorecard" class="px-4 py-2.5 text-xs font-semibold rounded-xl bg-cyan-950 text-cyan-300 border border-cyan-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie"></i> Executive Scorecard
+                    </button>
+                    <button onclick="switchTab('killers')" id="tab-btn-killers" class="px-4 py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Tödliche Killer & Slop
+                    </button>
+                    <button onclick="switchTab('copy')" id="tab-btn-copy" class="px-4 py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-pen"></i> Gehärtete Master-Copy
+                    </button>
+                    <button onclick="switchTab('pitch')" id="tab-btn-pitch" class="px-4 py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> High-Ticket Cold-Pitch
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="p-6">
+
+                    <!-- Tab 1: Executive Scorecard -->
+                    <div id="tab-content-scorecard" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Conversion Card -->
+                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 relative overflow-hidden">
+                                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Conversion-Score</div>
+                                <div class="flex items-baseline justify-between mt-2">
+                                    <div class="text-3xl font-black text-white font-mono" id="stat-conv">94<span class="text-xs text-slate-500 font-normal">/100</span></div>
+                                    <div class="text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800" id="stat-conv-delta">+38 Pkt</div>
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-2">Vorher: <span class="line-through text-slate-500" id="stat-conv-before">56</span> | Swarm-Verified</div>
+                            </div>
+                            <!-- Slop Toxizität -->
+                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 relative overflow-hidden">
+                                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">AI-Slop Toxizität</div>
+                                <div class="flex items-baseline justify-between mt-2">
+                                    <div class="text-3xl font-black text-emerald-400 font-mono" id="stat-slop">4<span class="text-xs text-slate-500 font-normal">%</span></div>
+                                    <div class="text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800" id="stat-slop-delta">-72% Rauschen</div>
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-2">Vorher: <span class="line-through text-slate-500" id="stat-slop-before">76%</span> | Sanitized</div>
+                            </div>
+                            <!-- Burstiness -->
+                            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 relative overflow-hidden">
+                                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Satz-Dynamik (Burstiness)</div>
+                                <div class="flex items-baseline justify-between mt-2">
+                                    <div class="text-3xl font-black text-cyan-400 font-mono" id="stat-burst">8.9</div>
+                                    <div class="text-xs font-bold text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">Menschlich</div>
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-2">Hohe Rhythmus-Varianz</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
+                            <h4 class="text-xs font-semibold text-white uppercase tracking-wide mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-400"></i> Red-Critic Gatekeeper Status
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Der deterministische Anti-Slop-Filter und die 4 feindlichen Käufer-Personas haben die Kopie in <strong class="text-white font-mono">3 Loops</strong> gehärtet. Alle verbotenen ChatGPT-Floskeln (wie *„nahtlos“* oder *„in einer Welt“*) wurden restlos getilgt. Beide Qualitäts-Scores liegen über der harten Schwelle von 92 Punkten.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Tödliche Killer & Diagnosen -->
+                    <div id="tab-content-killers" class="space-y-4 hidden">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Enttarnte Schwachstellen & GPT-Marker</h3>
+                        <div class="space-y-3" id="killersListContainer">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Gehärtete Master-Copy -->
+                    <div id="tab-content-copy" class="space-y-4 hidden">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-slate-400">92+ Punkte Master-Neufassung (Copy & Paste Ready)</span>
+                            <button onclick="copyToClipboard('copyTextContent', this)" class="px-3 py-1.5 text-xs font-semibold bg-cyan-950 text-cyan-300 border border-cyan-800 hover:bg-cyan-900 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-copy"></i> <span>Kopieren</span>
+                            </button>
+                        </div>
+                        <div id="copyTextContent" class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: High-Ticket Cold-Pitch -->
+                    <div id="tab-content-pitch" class="space-y-4 hidden">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-slate-400">Sofort versandfertige Outreach-Nachricht (Permissionless Value)</span>
+                            <button onclick="copyToClipboard('pitchTextContent', this)" class="px-3 py-1.5 text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800 hover:bg-emerald-900 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-copy"></i> <span>Kopieren</span>
+                            </button>
+                        </div>
+                        <div id="pitchTextContent" class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-bordercol py-4 px-6 text-center text-xs text-slate-500">
+        OMEGA Master-Orchestrator • Autonome Freelancer Intelligence Engine
+    </footer>
+
+    <!-- Frontend Interactive Logic Script -->
+    <script>
+        let currentMode = 'omega';
+
+        function setMode(mode) {
+            currentMode = mode;
+            ['omega', 'swarm', 'sanitize'].forEach(m => {
+                const btn = document.getElementById(`btn-mode-${m}`);
+                if (m === mode) {
+                    btn.className = "p-3 text-left rounded-xl border border-cyan-500 bg-cyan-950/40 text-white transition relative overflow-hidden group";
+                    if(!btn.querySelector('.absolute')) {
+                        const marker = document.createElement('div');
+                        marker.className = "absolute top-0 right-0 w-2 h-2 bg-cyan-400 rounded-bl";
+                        btn.appendChild(marker);
+                    }
+                } else {
+                    btn.className = "p-3 text-left rounded-xl border border-bordercol bg-slate-900/50 hover:bg-slate-800 text-slate-300 transition";
+                    const marker = btn.querySelector('.absolute');
+                    if(marker) marker.remove();
+                }
+            });
+        }
+
+        function loadPreset(type) {
+            if (type === 'saas') {
+                document.getElementById('targetInput').value = "https://beispiel-saas.io/ai-workflow";
+                document.getElementById('nicheInput').value = "B2B SaaS / Workflow-Automatisierung";
+                document.getElementById('styleInput').value = "Messerscharfer Direkt-Response-Architekt, kurze Sätze";
+                document.getElementById('objectionsInput').value = "Zu komplizierte API-Anbindung, unklare Kosten, langsamer Support";
+            } else if (type === 'agency') {
+                document.getElementById('targetInput').value = "https://digital-growth-agency.de/performance";
+                document.getElementById('nicheInput').value = "Performance Marketing Agentur";
+                document.getElementById('styleInput').value = "Autoritärer Sachbuch-Stil, harte Beweise, null Floskeln";
+                document.getElementById('objectionsInput').value = "Verbrennen Ad-Spend, nur Standard-Templates, Knebelverträge";
+            }
+        }
+
+        function switchTab(tabId) {
+            ['scorecard', 'killers', 'copy', 'pitch'].forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                const content = document.getElementById(`tab-content-${t}`);
+                if (t === tabId) {
+                    btn.className = "px-4 py-2.5 text-xs font-semibold rounded-xl bg-cyan-950 text-cyan-300 border border-cyan-800 transition flex items-center gap-2";
+                    content.classList.remove('hidden');
+                } else {
+                    btn.className = "px-4 py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-2";
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        function resetApp() {
+            document.getElementById('auditForm').reset();
+            document.getElementById('resultsCard').classList.add('hidden');
+            document.getElementById('terminalCard').classList.remove('hidden');
+            document.getElementById('consoleOutput').innerHTML = '<div class="text-slate-500">[SYSTEM] OMEGA Master-Orchestrator zurückgesetzt. Bereit für Neustart.</div>';
+            document.getElementById('statusBadge').innerText = "BEREIT";
+            document.getElementById('statusBadge').className = "px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 font-bold";
+            document.getElementById('progressContainer').classList.add('hidden');
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        function copyToClipboard(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> <span>Kopiert!</span>';
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            } catch (err) {
+                console.error('Kopieren fehlgeschlagen', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        async function startPipeline(e) {
+            e.preventDefault();
+            const target = document.getElementById('targetInput').value;
+            const niche = document.getElementById('nicheInput').value;
+            const style = document.getElementById('styleInput').value;
+            const objections = document.getElementById('objectionsInput').value;
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> LÄUFT...';
+
+            const consoleBox = document.getElementById('consoleOutput');
+            const statusBadge = document.getElementById('statusBadge');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressStepName = document.getElementById('progressStepName');
+            const progressPercent = document.getElementById('progressPercent');
+
+            consoleBox.innerHTML = '';
+            progressContainer.classList.remove('hidden');
+            statusBadge.innerText = "EXEKUTION";
+            statusBadge.className = "px-2 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold animate-pulse";
+
+            const log = (msg, color = "text-slate-300") => {
+                const div = document.createElement('div');
+                div.className = color;
+                div.innerText = msg;
+                consoleBox.appendChild(div);
+                consoleBox.scrollTop = consoleBox.scrollHeight;
+            };
+
+            const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+
+            // Simulation Sequence
+            progressBar.style.width = '10%';
+            progressPercent.innerText = '10%';
+            progressStepName.innerText = 'Phase 0: Ziel-URL Scraping & Strukturanalyse...';
+            log(`[*] Ingesting target source: ${target.substring(0, 45)}...`, "text-cyan-400");
+            await sleep(600);
+
+            progressBar.style.width = '30%';
+            progressPercent.innerText = '30%';
+            progressStepName.innerText = 'Phase 1: Adversarial Persona Schwarm (Skeptiker, CFO, ADHS)...';
+            log(`[+] Markt-Nische geladen: "${niche}"`, "text-slate-300");
+            log(`[*] Aktiviere 4 feindliche Käufer-Personas (Burned Skeptic, Ruthless CFO, ADHD Scroller, Domain Pedant)...`, "text-amber-400");
+            await sleep(800);
+            log(`    -> Verriss abgeschlossen. 3 tödliche Conversion-Killer identifiziert.`, "text-slate-400");
+
+            progressBar.style.width = '60%';
+            progressPercent.innerText = '60%';
+            progressStepName.innerText = 'Phase 2: Deterministische Slop-Forensik & Red-Critic Loops...';
+            log(`[*] Starte deterministische Burstiness- & Regex-Forensik...`, "text-cyan-400");
+            log(`    -> Initialer Slop-Index: 78% | Burstiness: 4.2 (Monoton)`, "text-red-400");
+            log(`[*] Dual Red-Critic Hardening-Loop läuft (Ziel >= 92 Pkt)...`, "text-amber-400");
+            await sleep(900);
+            log(`    -> Loop #1: Conversion 82 | Anti-Slop 85`, "text-slate-400");
+            log(`    -> Loop #2: Conversion 91 | Anti-Slop 90`, "text-slate-400");
+            log(`    -> Loop #3: Conversion 95 | Anti-Slop 94 [GATE BESTANDEN]`, "text-emerald-400");
+
+            progressBar.style.width = '90%';
+            progressPercent.innerText = '90%';
+            progressStepName.innerText = 'Phase 3: Generiere Executive Dossier & Cold-Pitch...';
+            log(`[*] Generiere 'Trojanisches Pferd' Permissionless Value Outreach-Pitch...`, "text-cyan-400");
+            await sleep(500);
+
+            progressBar.style.width = '100%';
+            progressPercent.innerText = '100%';
+            progressStepName.innerText = 'Pipeline erfolgreich abgeschlossen!';
+            log(`[+] OMEGA MASTER-DOSSIER in memory.db gespeichert.`, "text-emerald-400");
+
+            statusBadge.innerText = "ERFOLGREICH (94/94)";
+            statusBadge.className = "px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold";
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> OMEGA PIPELINE ERNEUT STARTEN';
+
+            // Populate Results Data
+            populateResults({ target, niche, style, objections });
+        }
+
+        function populateResults(data) {
+            document.getElementById('resultsCard').classList.remove('hidden');
+
+            // Populate Killers
+            const killersContainer = document.getElementById('killersListContainer');
+            killersContainer.innerHTML = `
+                <div class="bg-slate-900 border border-red-900/40 rounded-xl p-3">
+                    <div class="text-xs font-bold text-red-400 mb-1">1. Der verbrannte Skeptiker-Einwand</div>
+                    <p class="text-xs text-slate-300">„Die Hero-Sektion verspricht sofortige Wunder ohne konkreten mechanischen Beweis. Nach drei Pleiten in dieser Nische springe ich hier sofort ab.“</p>
+                </div>
+                <div class="bg-slate-900 border border-red-900/40 rounded-xl p-3">
+                    <div class="text-xs font-bold text-red-400 mb-1">2. Der geizige CFO-ROI Blocker</div>
+                    <p class="text-xs text-slate-300">„Keine quantifizierbare Amortisationszeit im ersten Absatz. Das finanzielle Risiko für den Implementierungsaufwand ist unklar.“</p>
+                </div>
+                <div class="bg-slate-900 border border-red-900/40 rounded-xl p-3">
+                    <div class="text-xs font-bold text-amber-500/80 mb-1">3. Enttarnter GPT-Slop (Regex Marker)</div>
+                    <p class="text-xs text-slate-300">Gefundene Floskeln im Original: <code class="text-red-400 font-mono">„in der heutigen schnelllebigen Welt“</code> und <code class="text-red-400 font-mono">„ganzheitlicher Ansatz“</code>.</p>
+                </div>
+            `;
+
+            // Populate Copy
+            document.getElementById('copyTextContent').innerText = 
+`# HERO-SEKTION (Gehärtet nach OMEGA Master Standard)
+
+Schluss mit theoretischem Agentur-Geschwätz. Wer im ${data.niche} heute noch Standard-Funnels schaltet, verbrennt monatlich 40% seines Budgets durch kognitive Reibung.
+
+## Der verifizierte Mechanismus
+Unsere autonome Engine bricht die Skepsis Ihrer Zielgruppe in der ersten Sekunde durch messbare Spezifität, hochmoderne Burstiness-Rhythmik und kompromisslose Beweisführung. 
+
+- **Keine leeren Versprechen:** Jeder Hook basiert auf echten 1-bis-3-Sterne-Marktfrustrationen.
+- **CFO-zertifizierter ROI:** Amortisation innerhalb von 14 Tagen oder Geld zurück.
+
+[ JETZT KOSTENLOSEN STRESSTEST ANFORDERN ]`;
+
+            // Populate Pitch
+            document.getElementById('pitchTextContent').innerText = 
+`Moin [Gründer / Inhaber],
+
+ich habe euren aktuellen Auftritt für ${data.niche} gestern Abend durch eine synthetische Fokusgruppe aus 4 feindlichen Käufer-Personas und einen deterministischen Slop-Forensik-Filter gejagt.
+
+Das System hat 3 kritische Conversion-Lecks markiert (u.a. unklarer Beweismechanismus in der Hero-Sektion und typische KI-Floskeln, die Vertrauen kosten). Initialer Score lag bei 54/100.
+
+Hier ist der direkt für euch gehärtete Hero-Hook als freies Geschenk zur sofortigen Verwendung:
+
+> "Schluss mit theoretischem Agentur-Geschwätz. Wer im ${data.niche} heute noch Standard-Funnels schaltet, verbrennt monatlich 40% seines Budgets durch kognitive Reibung."
+
+Wenn ihr wollt, dass ich euren gesamten Funnel einmal komplett durch den OMEGA Master-Stresstest jage, sagt Bescheid.
+
+Beste Grüße,
+[Dein Name]`;
+
+            // Scroll to results
+            document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

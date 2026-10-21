@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMEGA Free Audit - Conversion & Slop-Analyse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { darkbg: '#090d16', cardbg: '#111827', bordercol: '#1f2937', neoncyan: '#06b6d4', neongreen: '#10b981' } } }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #090d16; color: #f3f4f6; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-2xl w-full">
+        <!-- Hero -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-black font-black text-3xl mx-auto mb-4 shadow-lg shadow-cyan-500/30">Ω</div>
+            <h1 class="text-3xl font-black text-white mb-2">Kostenloser Conversion & Slop-Audit</h1>
+            <p class="text-slate-400 text-sm">Lassen Sie Ihre Landingpage durch 4 feindliche Käufer-Personas und einen deterministischen Slop-Detektor prüfen. Ergebnis: Score, Killer-Analyse und gehärtete Copy.</p>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-cardbg border border-bordercol rounded-2xl p-6 shadow-xl">
+            <form id="leadForm" onsubmit="submitLead(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Ihre Landingpage-URL *</label>
+                    <input type="url" id="urlInput" required placeholder="https://ihre-website.de" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Ihr Name *</label>
+                        <input type="text" id="nameInput" required placeholder="Max Mustermann" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Ihre E-Mail *</label>
+                        <input type="email" id="emailInput" required placeholder="max@firma.de" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Ihre Branche / Nische</label>
+                    <input type="text" id="nicheInput" placeholder="B2B SaaS, E-Commerce, Agentur..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Bekannte Probleme / Einwände</label>
+                    <input type="text" id="objectionsInput" placeholder="Zu teuer, zu komplex, unklare ROI..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-black font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt"></i> KOSTENLOSEN AUDIT ANFORDERN
+                </button>
+            </form>
+        </div>
+
+        <!-- Trust Signals -->
+        <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+            <div class="bg-cardbg border border-bordercol rounded-xl p-4">
+                <div class="text-2xl font-black text-cyan-400">4</div>
+                <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Feindliche Personas</div>
+            </div>
+            <div class="bg-cardbg border border-bordercol rounded-xl p-4">
+                <div class="text-2xl font-black text-emerald-400">≥92</div>
+                <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Red-Critic Score</div>
+            </div>
+            <div class="bg-cardbg border border-bordercol rounded-xl p-4">
+                <div class="text-2xl font-black text-white">0€</div>
+                <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Kostenloser Erst-Audit</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-xs text-slate-500">
+            <p>OMEGA Master Orchestrator • Adversarial Swarm Stresstest & Deterministischer Slop-Sanitizer</p>
+            <p class="mt-1">Ergebnis innerhalb von 24 Stunden. Keine Verpflichtung.</p>
+        </div>
+    </div>
+
+    <script>
+        function submitLead(e) {
+            e.preventDefault();
+            const url = document.getElementById('urlInput').value;
+            const name = document.getElementById('nameInput').value;
+            const email = document.getElementById('emailInput').value;
+            const niche = document.getElementById('nicheInput').value;
+            const objections = document.getElementById('objectionsInput').value;
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> WIRD VERARBEITET...';
+
+            // Save lead to localStorage (for demo) - in production, send to backend
+            const lead = { url, name, email, niche, objections, timestamp: new Date().toISOString() };
+            const leads = JSON.parse(localStorage.getItem('omega_leads') || '[]');
+            leads.push(lead);
+            localStorage.setItem('omega_leads', JSON.stringify(leads));
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> AUDIT ANGEFORDERT!';
+                btn.className = 'w-full py-4 bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center gap-2';
+                alert(`Vielen Dank, ${name}! Ihr kostenloser Audit für ${url} wird innerhalb von 24 Stunden erstellt und an ${email} gesendet.`);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
