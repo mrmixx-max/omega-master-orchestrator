@@ -34,6 +34,7 @@ OMEGA Master Orchestrator kombiniert zwei leistungsstarke KI-Engines in einer ei
 | Script | Beschreibung |
 |---|---|
 | `omega_orchestrator.py` | Haupt-Pipeline (Audit + Slop-Sanitization + Proposal) |
+| `omega_hunter.py` | Batch Lead Hunter & Outreach Automation (CSV → Pipeline → E-Mail) |
 | `batch_processor.py` | Verarbeitet mehrere URLs aus einer Datei |
 | `compare_dossiers.py` | Vergleicht zwei Audits side-by-side |
 | `watch_mode.py` | Überwacht URL, re-auditiert bei Änderungen |
