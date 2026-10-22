@@ -333,7 +333,9 @@ def main():
     parser.add_argument("--search", "-s", help="Suchbegriff für DuckDuckGo-Suche")
     parser.add_argument("--niche", "-n", default="B2B SaaS", help="Ziel-Nische")
     parser.add_argument("--delay", "-d", type=float, default=1.0, help="Verzögerung zwischen Requests (Sekunden)")
-    parser.add_argument("--num", type=int, default=20, help="Anzahl Suchergebnisse")
+    parser.add_argument("--auto-discover", "-a", action="store_true", help="Automatisch URLs via GitHub API finden")
+    parser.add_argument("--discover-query", default="landing page saas", help="Suchbegriff für Auto-Discovery")
+    parser.add_argument("--discover-num", type=int, default=20, help="Anzahl zu entdeckender URLs")
     args = parser.parse_args()
 
     urls = []
@@ -342,11 +344,12 @@ def main():
     if args.file:
         with open(args.file, "r", encoding="utf-8") as f:
             urls.extend([line.strip() for line in f if line.strip()])
-    if args.search:
-        import urllib.parse
-        search_urls = scrape_from_search(args.search, args.num)
-        urls.extend(search_urls)
-        print(f"[+] {len(search_urls)} URLs aus Suche gefunden")
+    if args.auto_discover:
+        sys.path.insert(0, str(SKILL_DIR))
+        from omega_auto_discover import discover_github
+        discovered = discover_github(args.discover_query, args.discover_num)
+        urls.extend(discovered)
+        print(f"[+] {len(discovered)} URLs via Auto-Discovery gefunden")
 
     if not urls:
         print("[!] Keine URLs angegeben. Nutze --urls, --file oder --search")

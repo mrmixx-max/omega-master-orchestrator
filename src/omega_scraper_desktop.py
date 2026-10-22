@@ -115,6 +115,16 @@ class ScraperAPI:
         webbrowser.open(f"file:///{path.replace(os.sep, '/')}")
         return {"status": "ok"}
 
+    def auto_discover(self, query, num=20):
+        """Findet URLs automatisch via GitHub API."""
+        try:
+            sys.path.insert(0, str(SKILL_DIR))
+            from omega_auto_discover import discover_github
+            urls = discover_github(query, num)
+            return {"status": "ok", "urls": urls, "count": len(urls)}
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+
     def get_status(self):
         return {
             "python": sys.version.split()[0],
@@ -167,6 +177,7 @@ def get_html():
       </div>
     </div>
     <button onclick="runScrape()" id="scrapeBtn" class="mt-4 px-6 py-3 rounded-lg font-bold bg-gradient-to-r from-red-500 to-orange-500 text-black hover:shadow-lg transition">🚀 Scrapen & Analysieren</button>
+    <button onclick="autoDiscover()" id="discoverBtn" class="mt-4 ml-2 px-6 py-3 rounded-lg font-bold bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:shadow-lg transition">🔍 Auto-Discover</button>
     <button onclick="exportResults()" id="exportBtn" class="mt-4 ml-2 px-6 py-3 rounded-lg font-bold bg-gray-800 text-white hover:bg-gray-700 transition" disabled>💾 Exportieren</button>
   </div>
   <div id="log" class="bg-gray-900 border border-gray-800 rounded-xl p-4">
@@ -184,6 +195,22 @@ def get_html():
   </div>
 </main>
 <script>
+async function autoDiscover() {
+  const query = document.getElementById('niche').value || 'landing page saas';
+  const btn = document.getElementById('discoverBtn');
+  btn.disabled = true; btn.textContent = '⏳ Discovering...';
+  log('🔍 Auto-Discover: Suche nach Websites...');
+  try {
+    const res = await window.pywebview.api.auto_discover(query, 20);
+    if (res.status === 'ok') {
+      log('✅ ' + res.count + ' URLs gefunden');
+      document.getElementById('urls').value = res.urls.join('\\n');
+    } else {
+      log('❌ ' + res.message);
+    }
+  } catch(e) { log('❌ ' + e); }
+  btn.disabled = false; btn.textContent = '🔍 Auto-Discover';
+}
 async function runScrape() {
   const urls = document.getElementById('urls').value;
   const niche = document.getElementById('niche').value;
