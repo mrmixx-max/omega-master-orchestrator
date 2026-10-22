@@ -119,8 +119,8 @@ class ScraperAPI:
         """Findet URLs automatisch aus allen Quellen."""
         try:
             sys.path.insert(0, str(SKILL_DIR))
-            from omega_auto_discover import discover_all
-            urls = discover_all(query, num)
+            from omega_auto_discover import discover_all_v3
+            urls = discover_all_v3(query, num)
             return {"status": "ok", "urls": urls, "count": len(urls)}
         except Exception as e:
             return {"status": "error", "message": str(e)}
