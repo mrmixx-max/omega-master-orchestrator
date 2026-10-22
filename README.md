@@ -30,6 +30,25 @@ OMEGA Master Orchestrator kombiniert zwei leistungsstarke KI-Engines in einer ei
 - **Proposal-Generator** — Maßgeschneidertes High-Ticket Service-Angebot
 - **Executive HTML Report** — Druckoptimiert mit Scorecard, Copy, Pitch, Proposal
 
+### Desktop App
+
+OMEGA Master ist auch als Desktop-Anwendung verfügbar:
+
+```bash
+# PyWebView Desktop App (Python)
+python omega_desktop.py
+
+# Oder als Standalone .exe (36 MB)
+# Download: OMEGA-Master.exe
+```
+
+**Features:**
+- Natives Desktop-Fenster mit Cyberpunk-UI
+- JS-Bridge zu Python (Audit, Rechnungen, Status)
+- Ollama-Status-Anzeige
+- Dossier-Browser
+- Keine Browser-Abhängigkeit
+
 ### Tools & Scripts
 | Script | Beschreibung |
 |---|---|
