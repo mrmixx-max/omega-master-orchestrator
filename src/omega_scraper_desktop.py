@@ -32,7 +32,7 @@ class ScraperAPI:
             return {"status": "error", "message": "Bereits läuft"}
         self.running = True
         try:
-            from omega_slop_scraper import scrape_url, quick_slop_scan, score_lead, generate_sales_email
+            from omega_slop_scraper import scrape_url, analyze_slop, score_lead, generate_sales_email
             urls = [u.strip() for u in urls_text.split("\n") if u.strip()]
             results = []
             for url in urls:
@@ -40,9 +40,9 @@ class ScraperAPI:
                 if scraped["status"] == "error":
                     results.append({"url": url, "status": "error", "error": scraped["error"], "lead_score": 0})
                     continue
-                scan = quick_slop_scan(scraped["text"])
-                lead_score = score_lead(scan, scraped["text"])
-                email = generate_sales_email(url, scraped["title"], scan, niche)
+                scan = analyze_slop(scraped["text"], scraped.get("paragraphs"))
+                lead_score, reasons = score_lead(scan, scraped["text"], scraped.get("title", ""))
+                email = generate_sales_email(url, scraped["title"], scan, niche, reasons)
                 results.append({
                     "url": url, "title": scraped["title"], "status": "ok",
                     "scan": scan, "lead_score": lead_score, "email": email,
