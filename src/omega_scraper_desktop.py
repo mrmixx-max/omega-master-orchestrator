@@ -38,14 +38,18 @@ class ScraperAPI:
             for url in urls:
                 scraped = scrape_url(url)
                 if scraped["status"] == "error":
-                    results.append({"url": url, "status": "error", "error": scraped["error"], "lead_score": 0})
+                    results.append({"url": url, "title": "", "status": "error", "error": scraped["error"], "lead_score": 0})
+                    continue
+                if scraped["status"] == "blocked":
+                    results.append({"url": url, "title": scraped.get("title", ""), "status": "blocked", "error": scraped["error"], "lead_score": 0})
                     continue
                 scan = analyze_slop(scraped["text"], scraped.get("paragraphs"))
-                lead_score, reasons = score_lead(scan, scraped["text"], scraped.get("title", ""))
-                email = generate_sales_email(url, scraped["title"], scan, niche, reasons)
+                lead_score, reasons = score_lead(scan, scraped["text"], scraped.get("title", ""), scraped)
+                email = generate_sales_email(url, scraped["title"], scan, niche, reasons, scraped)
                 results.append({
                     "url": url, "title": scraped["title"], "status": "ok",
                     "scan": scan, "lead_score": lead_score, "email": email,
+                    "scraped_data": scraped,
                 })
             # Sort by lead score
             ok = [r for r in results if r["status"] == "ok"]
