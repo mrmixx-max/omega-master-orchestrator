@@ -346,8 +346,8 @@ def main():
             urls.extend([line.strip() for line in f if line.strip()])
     if args.auto_discover:
         sys.path.insert(0, str(SKILL_DIR))
-        from omega_auto_discover import discover_github
-        discovered = discover_github(args.discover_query, args.discover_num)
+        from omega_auto_discover import discover_all
+        discovered = discover_all(args.discover_query, args.discover_num)
         urls.extend(discovered)
         print(f"[+] {len(discovered)} URLs via Auto-Discovery gefunden")
 
