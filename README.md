@@ -2,6 +2,8 @@
 
 > **Adversarial Swarm Stresstest & Deterministischer Slop-Sanitizer** — Ein reaktives High-Performance-System zur kompromisslosen Härtung von Landingpages, Sales-Copy und Angeboten mit modernem React, TypeScript & Tailwind CSS.
 
+**Lizenz:** AGPL-3.0 — Freie Software, Copyleft. Jeder der dieses Projekt nutzt oder modifiziert muss den Quellcode offenlegen.
+
 ---
 
 ## 🎯 Was ist OMEGA Master?
