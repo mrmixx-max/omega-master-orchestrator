@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0f1d" />
+      <stop offset="50%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#050810" />
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.2" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded square for Windows / Desktop App -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="url(#borderGrad)" stroke-width="4" />
+
+  <!-- Cyber grid lines -->
+  <line x1="96" y1="256" x2="416" y2="256" stroke="#06b6d4" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="6 6" />
+  <line x1="256" y1="96" x2="256" y2="416" stroke="#06b6d4" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="6 6" />
+  <circle cx="256" cy="256" r="176" fill="none" stroke="#06b6d4" stroke-opacity="0.15" stroke-width="2" stroke-dasharray="4 8" />
+
+  <!-- Outer Hexagon / Target Ring -->
+  <polygon points="256,76 396,156 396,316 256,396 116,316 116,156" fill="none" stroke="url(#primaryGrad)" stroke-width="6" opacity="0.4" />
+
+  <!-- Glowing Omega Symbol -->
+  <g filter="url(#glow)">
+    <path d="M168,368 L220,368 C212,344 204,316 200,284 C192,232 216,180 256,180 C296,180 320,232 312,284 C308,316 300,344 292,368 L344,368 C354,368 360,376 360,384 C360,392 354,400 344,400 L280,400 C272,400 266,394 266,386 C276,346 286,306 288,276 C292,238 276,204 256,204 C236,204 220,238 224,276 C226,306 236,346 246,386 C246,394 240,400 232,400 L168,400 C158,400 152,392 152,384 C152,376 158,368 168,368 Z" fill="url(#primaryGrad)" />
+    <!-- Center Core Dot -->
+    <circle cx="256" cy="276" r="14" fill="#22d3ee" />
+  </g>
+
+  <!-- Accent crosshairs -->
+  <rect x="252" y="56" width="8" height="24" rx="4" fill="#22d3ee" opacity="0.8" />
+  <rect x="252" y="432" width="8" height="24" rx="4" fill="#22d3ee" opacity="0.8" />
+  <rect x="56" y="252" width="24" height="8" rx="4" fill="#22d3ee" opacity="0.8" />
+  <rect x="432" y="252" width="24" height="8" rx="4" fill="#22d3ee" opacity="0.8" />
+</svg>

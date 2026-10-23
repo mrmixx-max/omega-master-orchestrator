@@ -1,0 +1,8 @@
+{
+  "name": "OMEGA Master Orchestrator",
+  "description": "Adversarial Swarm Stresstest & Deterministischer Slop-Sanitizer - KI-gestütztes System zur kompromisslosen Härtung von Landingpages, Sales-Copy und Angeboten.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
